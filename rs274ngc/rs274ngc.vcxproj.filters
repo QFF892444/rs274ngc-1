@@ -35,9 +35,6 @@
     <ClCompile Include="rs274ngc_errors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rs274ngc_pre.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="driver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

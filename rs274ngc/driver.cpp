@@ -367,9 +367,10 @@ char * file_name)                                 /* name of tool file */
 int designate_parameter_file(char * file_name, size_t length)
 {
     FILE * test_port;
-
+	unsigned int ilength;
+	ilength = (int)length;
     fprintf(stderr, "name of parameter file => ");
-	fgets(file_name, length, stdin);
+	fgets(file_name, ilength, stdin);
 
      fopen_s(&test_port,file_name, "r");
     if (test_port IS NULL)
@@ -649,3 +650,4 @@ int main (int argc, char ** argv)
 
 
    /***********************************************************************/
+

@@ -148,7 +148,7 @@
 } else
 
 #define ERP(error_code) if (_setup.stack_index < 49) { \
-    strcpy_s(_setup.stack[_setup.stack_index++], strlen(name),name); \
+    strcpy_s(_setup.stack[_setup.stack_index++], sizeof(_setup.stack[0]),name); \
     _setup.stack[_setup.stack_index][0] SET_TO 0; \
     return error_code; \
 } else return error_code
@@ -517,7 +517,7 @@ double * parameters);
 static int read_t(char * line, int * counter, block_pointer block,
 double * parameters);
 static int read_text(const char * command, FILE * inport, char * raw_line, size_t raw_line_length,
-char * line, size_t line_length, int * length);
+char * line, size_t line_length, size_t * length);
 static int read_unary(char * line, int * counter, double * double_ptr,
 double * parameters);
 static int read_x(char * line, int * counter, block_pointer block,
@@ -5770,9 +5770,9 @@ repeat--) \
     setup_pointer settings)                       /* pointer to machine settings                  */
     {
         static char name[] SET_TO "convert_stop";
-        int index;
+        size_t index;
         char * line;
-        int length;
+        size_t length;
 
         if (block->m_modes[4] IS 0)
         {
@@ -9102,7 +9102,7 @@ repeat--) \
     {
         static char name[] SET_TO "read_items";
         int counter;
-        int length;
+        size_t length;
         int status;
 
         length SET_TO strlen(line);
@@ -10757,11 +10757,11 @@ repeat--) \
 		size_t raw_line_length,							/* length of line */
 		char * line,                                  /* array for input line to be processed in     */
 	size_t line_length,							/* length of line */
-    int * length)                                 /* a pointer to an integer to be set           */
+    size_t * length)                                 /* a pointer to an integer to be set           */
     {
         static char name[] SET_TO "read_text";
         int status;                               /* used in CHP */
-        int index;
+        size_t index;
 
         if (command IS NULL)
         {
@@ -11595,8 +11595,8 @@ repeat--) \
     {
         static char name[] SET_TO "rs274ngc_open";
         char * line;
-        int index;
-        int length;
+        size_t index;
+        size_t length;
 
         CHK((_setup.file_pointer ISNT NULL), NCE_A_FILE_IS_ALREADY_OPEN);
         CHK((strlen(filename) > (RS274NGC_TEXT_SIZE - 1)), NCE_FILE_NAME_TOO_LONG);
@@ -12170,7 +12170,7 @@ repeat--) \
 
    */
 
-    int rs274ngc_line_length()
+    size_t rs274ngc_line_length()
     {
         return _setup.line_length;
     }

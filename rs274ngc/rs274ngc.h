@@ -323,7 +323,7 @@ typedef struct setup_struct
     ON_OFF flood;                                 // whether flood coolant is on
     int length_offset_index;                      // for use with tool length offsets
     CANON_UNITS length_units;                     // millimeters or inches
-    int line_length;                              // length of line last read
+    size_t line_length;                              // length of line last read
     char linetext[RS274NGC_TEXT_SIZE];            // text of most recent line read
     ON_OFF mist;                                  // whether mist coolant is on
     int motion_mode;                              // active G-code for motion
@@ -436,7 +436,7 @@ int max_size);
 extern void rs274ngc_file_name(char * file_name, int max_size);
 
    // return the length of the most recently read line
-extern int rs274ngc_line_length();
+extern size_t rs274ngc_line_length();
 
    // copy the text of the most recently read line into the line_text array,
    // but stop at max_size if the text is longer

@@ -1099,3 +1099,4 @@ double GET_EXTERNAL_TRAVERSE_RATE()
 {
     return _traverse_rate;
 }
+#include  "rs274ngc_pre.cpp"
