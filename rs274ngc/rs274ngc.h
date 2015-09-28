@@ -1,47 +1,47 @@
-   /************************************************************************
+/************************************************************************
 
-       Copyright 2008 Mark Pictor
+    Copyright 2008 Mark Pictor
 
-   This file is part of RS274NGC.
+This file is part of RS274NGC.
 
-   RS274NGC is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+RS274NGC is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-   RS274NGC is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+RS274NGC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with RS274NGC.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with RS274NGC.  If not, see <http://www.gnu.org/licenses/>.
 
-   This software is based on software that was produced by the National
-   Institute of Standards and Technology (NIST).
+This software is based on software that was produced by the National
+Institute of Standards and Technology (NIST).
 
-   ************************************************************************/
+************************************************************************/
 
 #ifndef RS274NGC_HH
 #define RS274NGC_HH
 
-   /*
-     rs274ngc.hh
+/*
+  rs274ngc.hh
 
-   Declarations for the rs274abc translator.
+Declarations for the rs274abc translator.
 
-   */
+*/
 
-   /**********************/
-   /* INCLUDE DIRECTIVES */
-   /**********************/
+/**********************/
+/* INCLUDE DIRECTIVES */
+/**********************/
 
 #include <stdio.h>
 #include "canon.h"
 
-   /**********************/
-   /*   COMPILER MACROS  */
-   /**********************/
+/**********************/
+/*   COMPILER MACROS  */
+/**********************/
 
 #define AND              &&
 #define IS               ==
@@ -61,12 +61,12 @@
 
 #define RS274NGC_TEXT_SIZE 256
 
-   /* numerical constants */
+/* numerical constants */
 #define TOLERANCE_INCH 0.0002
 #define TOLERANCE_MM 0.002
 #define TOLERANCE_CONCAVE_CORNER 0.01
-   /* angle threshold for concavity for
-                        cutter compensation, in radians */
+/* angle threshold for concavity for
+                     cutter compensation, in radians */
 #define TINY 1e-12                                /* for arc_data_r */
 #define UNKNOWN 1e-20
 #define TWO_PI  6.2831853071795864
@@ -79,41 +79,41 @@
 #define PI2     1.5707963267948966
 #endif
 
-   // array sizes
+// array sizes
 #define RS274NGC_ACTIVE_G_CODES 12
 #define RS274NGC_ACTIVE_M_CODES 7
 #define RS274NGC_ACTIVE_SETTINGS 3
 
-   // name of parameter file for saving/restoring interpreter variables
-#define RS274NGC_PARAMETER_FILE_NAME_DEFAULT "rs274ngc.var"
+// name of parameter file for saving/restoring interpreter variables
+#define RS274NGC_PARAMETER_FILE_NAME_DEFAULT "..\\rs274ngc.var"
 #define RS274NGC_PARAMETER_FILE_BACKUP_SUFFIX ".bak"
 
-   // max number of m codes on one line
+// max number of m codes on one line
 #define MAX_EMS  4
 
-   // English - Metric conversion (long number keeps error buildup down)
+// English - Metric conversion (long number keeps error buildup down)
 #define MM_PER_INCH 25.4
 #define INCH_PER_MM 0.039370078740157477
 
-   // on-off switch settings
+// on-off switch settings
 #define OFF 0
 #define ON 1
 
-   // feed_mode
+// feed_mode
 #define UNITS_PER_MINUTE 0
 #define INVERSE_TIME 1
 
-   // cutter radius compensation mode, OFF already defined to 0
-   // not using CANON_SIDE since interpreter handles cutter radius comp
+// cutter radius compensation mode, OFF already defined to 0
+// not using CANON_SIDE since interpreter handles cutter radius comp
 #define RIGHT 1
 #define LEFT 2
 
-   // number of parameters in parameter table
+// number of parameters in parameter table
 #define RS274NGC_MAX_PARAMETERS 5400
 
-   // unary operations
-   // These are not enums because the "&" operator is used in
-   // reading the operation names and is illegal with an enum
+// unary operations
+// These are not enums because the "&" operator is used in
+// reading the operation names and is illegal with an enum
 
 #define ABS 1
 #define ACOS 2
@@ -129,7 +129,7 @@
 #define SQRT 12
 #define TAN 13
 
-   // binary operations
+// binary operations
 #define NO_OPERATION 0
 #define DIVIDED_BY 1
 #define MODULO 2
@@ -142,7 +142,7 @@
 #define PLUS 9
 #define RIGHT_BRACKET 10
 
-   // G Codes are symbolic to be dialect-independent in source code
+// G Codes are symbolic to be dialect-independent in source code
 #define G_0      0
 #define G_1     10
 #define G_2     20
@@ -196,22 +196,21 @@
 #define G_98   980
 #define G_99   990
 
-   /**********************/
-   /*      TYPEDEFS      */
-   /**********************/
+/**********************/
+/*      TYPEDEFS      */
+/**********************/
 
-   /* distance_mode */
+/* distance_mode */
 typedef enum {MODE_ABSOLUTE, MODE_INCREMENTAL}
 DISTANCE_MODE;
 
-   /* retract_mode for cycles */
+/* retract_mode for cycles */
 typedef enum {R_PLANE, OLD_Z}
 RETRACT_MODE;
 
 typedef int ON_OFF;
 
-typedef struct block_struct
-{
+typedef struct block_struct {
 #ifdef AA
     ON_OFF   a_flag;
     double   a_number;
@@ -256,23 +255,22 @@ typedef struct block_struct
 
 typedef block * block_pointer;
 
-   /*
+/*
 
-   The current_x, current_y, and current_z are the location of the tool
-   in the current coordinate system. current_x and current_y differ from
-   program_x and program_y when cutter radius compensation is on.
-   current_z is the position of the tool tip in program coordinates when
-   tool length compensation is using the actual tool length; it is the
-   position of the spindle when tool length is zero.
+The current_x, current_y, and current_z are the location of the tool
+in the current coordinate system. current_x and current_y differ from
+program_x and program_y when cutter radius compensation is on.
+current_z is the position of the tool tip in program coordinates when
+tool length compensation is using the actual tool length; it is the
+position of the spindle when tool length is zero.
 
-   In a setup, the axis_offset values are set by g92 and the origin_offset
-   values are set by g54 - g59.3. The net origin offset uses both values
-   and is not represented here
+In a setup, the axis_offset values are set by g92 and the origin_offset
+values are set by g54 - g59.3. The net origin offset uses both values
+and is not represented here
 
-   */
+*/
 
-typedef struct setup_struct
-{
+typedef struct setup_struct {
 #ifdef AA
     double AA_axis_offset;                        // A-axis g92 offset
     double AA_current;                            // current A-axis position
@@ -289,11 +287,11 @@ typedef struct setup_struct
     double CC_origin_offset;                      // C-axis origin offset
 #endif
     int active_g_codes
-        [RS274NGC_ACTIVE_G_CODES];                // array of active G codes
+    [RS274NGC_ACTIVE_G_CODES];                // array of active G codes
     int active_m_codes
-        [RS274NGC_ACTIVE_M_CODES];                // array of active M codes
+    [RS274NGC_ACTIVE_M_CODES];                // array of active M codes
     double active_settings
-        [RS274NGC_ACTIVE_SETTINGS];               // array of feed, speed, etc.
+    [RS274NGC_ACTIVE_SETTINGS];               // array of feed, speed, etc.
     double axis_offset_x;                         // X-axis g92 offset
     double axis_offset_y;                         // Y-axis g92 offset
     double axis_offset_z;                         // Z-axis g92 offset
@@ -332,7 +330,7 @@ typedef struct setup_struct
     double origin_offset_y;                       // origin offset y
     double origin_offset_z;                       // origin offset z
     double parameters
-        [RS274NGC_MAX_PARAMETERS];                // system parameters
+    [RS274NGC_MAX_PARAMETERS];                // system parameters
     int parameter_occurrence;                     // parameter buffer index
     int parameter_numbers[50];                    // parameter number buffer
     double parameter_values[50];                  // parameter value buffer
@@ -353,101 +351,101 @@ typedef struct setup_struct
     double tool_length_offset;                    // current tool length offset
     int tool_max;                                 // highest number tool slot in carousel
     CANON_TOOL_TABLE tool_table
-        [CANON_TOOL_MAX + 1];                     // index is slot number
+    [CANON_TOOL_MAX + 1];                     // index is slot number
     int tool_table_index;                         // tool index used with cutter comp
     double traverse_rate;                         // rate for traverse motions
 } setup;
 
 typedef setup * setup_pointer;
 
-   // pointer to function that reads
-typedef int (*read_function_pointer) (char *, int *, block_pointer, double *);
+// pointer to function that reads
+typedef int ( *read_function_pointer ) ( char *, int *, block_pointer, double * );
 
-   /*************************************************************************/
-   /*
+/*************************************************************************/
+/*
 
-   Interface functions to call to tell the interpreter what to do.
-   Return values indicate status of execution.
-   These functions may change the state of the interpreter.
+Interface functions to call to tell the interpreter what to do.
+Return values indicate status of execution.
+These functions may change the state of the interpreter.
 
-   */
+*/
 
-   // close the currently open NC code file
+// close the currently open NC code file
 extern int rs274ngc_close();
 
-   // execute a line of NC code
+// execute a line of NC code
 extern int rs274ngc_execute();
 
-   // stop running
+// stop running
 extern int rs274ngc_exit();
 
-   // get ready to run
+// get ready to run
 extern int rs274ngc_init();
 
-   // load a tool table
+// load a tool table
 extern int rs274ngc_load_tool_table();
 
-   // open a file of NC code
-extern int rs274ngc_open(const char *filename);
+// open a file of NC code
+extern int rs274ngc_open ( const char *filename );
 
-   // read the mdi or the next line of the open NC code file
-extern int rs274ngc_read(const char * mdi = 0);
+// read the mdi or the next line of the open NC code file
+extern int rs274ngc_read ( const char * mdi = 0 );
 
-   // reset yourself
+// reset yourself
 extern int rs274ngc_reset();
 
-   // restore interpreter variables from a file
-extern int rs274ngc_restore_parameters(const char * filename);
+// restore interpreter variables from a file
+extern int rs274ngc_restore_parameters ( const char * filename );
 
-   // save interpreter variables to file
-extern int rs274ngc_save_parameters(const char * filename,
-const double parameters[]);
+// save interpreter variables to file
+extern int rs274ngc_save_parameters ( const char * filename,
+                                      const double parameters[] );
 
-   // synchronize your internal model with the external world
+// synchronize your internal model with the external world
 extern int rs274ngc_synch();
 
-   /*************************************************************************/
-   /* 
+/*************************************************************************/
+/*
 
-   Interface functions to call to get information from the interpreter.
-   If a function has a return value, the return value contains the information.
-   If a function returns nothing, information is copied into one of the
-   arguments to the function. These functions do not change the state of
-   the interpreter.
+Interface functions to call to get information from the interpreter.
+If a function has a return value, the return value contains the information.
+If a function returns nothing, information is copied into one of the
+arguments to the function. These functions do not change the state of
+the interpreter.
 
-   */
+*/
 
-   // copy active G codes into array [0]..[11]
-extern void rs274ngc_active_g_codes(int * codes);
+// copy active G codes into array [0]..[11]
+extern void rs274ngc_active_g_codes ( int * codes );
 
-   // copy active M codes into array [0]..[6]
-extern void rs274ngc_active_m_codes(int * codes);
+// copy active M codes into array [0]..[6]
+extern void rs274ngc_active_m_codes ( int * codes );
 
-   // copy active F, S settings into array [0]..[2]
-extern void rs274ngc_active_settings(double * settings);
+// copy active F, S settings into array [0]..[2]
+extern void rs274ngc_active_settings ( double * settings );
 
-   // copy the text of the error message whose number is error_code into the
-   // error_text array, but stop at max_size if the text is longer.
-extern void rs274ngc_error_text(int error_code, char * error_text,size_t error_text_length,
-int max_size);
+// copy the text of the error message whose number is error_code into the
+// error_text array, but stop at max_size if the text is longer.
+extern void rs274ngc_error_text ( int error_code, char * error_text, size_t error_text_length,
+                                  int max_size );
 
-   // copy the name of the currently open file into the file_name array,
-   // but stop at max_size if the name is longer
-extern void rs274ngc_file_name(char * file_name, int max_size);
+// copy the name of the currently open file into the file_name array,
+// but stop at max_size if the name is longer
+extern void rs274ngc_file_name ( char * file_name, int max_size );
 
-   // return the length of the most recently read line
+// return the length of the most recently read line
 extern size_t rs274ngc_line_length();
 
-   // copy the text of the most recently read line into the line_text array,
-   // but stop at max_size if the text is longer
-extern void rs274ngc_line_text(char * line_text, int max_size);
+// copy the text of the most recently read line into the line_text array,
+// but stop at max_size if the text is longer
+extern void rs274ngc_line_text ( char * line_text, int max_size );
 
-   // return the current sequence number (how many lines read)
+// return the current sequence number (how many lines read)
 extern int rs274ngc_sequence_number();
 
-   // copy the function name from the stack_index'th position of the
-   // function call stack at the time of the most recent error into
-   // the function name string, but stop at max_size if the name is longer
-extern void rs274ngc_stack_name(int stack_index, char * function_name,
-int max_size);
+// copy the function name from the stack_index'th position of the
+// function call stack at the time of the most recent error into
+// the function name string, but stop at max_size if the name is longer
+extern void rs274ngc_stack_name ( int stack_index, char * function_name,
+                                  int max_size );
 #endif
